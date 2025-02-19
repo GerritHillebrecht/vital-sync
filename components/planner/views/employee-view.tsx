@@ -1,74 +1,85 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+import { useCurrentLocale } from "@/locales/client";
+import { Employee, Shift, ShiftService } from "@/models";
+import dayjs from "dayjs";
 import {
   PlannerDayHeadline,
   PlannerDayShiftContainer,
+  PlannerDayShiftItemEmployee,
   PlannerRow,
-  PlannerRowClientHoverCard,
   PlannerRowContentMonthgridWrapper,
   PlannerRowFooter,
   PlannerRowHeadline,
   PlannerRowHeadlineSubtitle,
   PlannerRowHeadlineTitle,
   PlannerRowMonthGrid,
-  usePlanner
-} from "@/components/planner";
+} from "../components";
+import { usePlanner } from "../provider";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { buttonVariants } from "@/components/ui/button";
-
-import dayjs from "@/lib/dayjs";
-import { cn } from "@/lib/utils";
-import { useCurrentLocale } from "@/locales/client";
-import { Shift, ShiftService } from "@/models";
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
-import { PlannerDayAddShift } from "../components/day/shift-add";
-import { PlannerDayShiftItemShiftService } from "../components/day/shift-item-shift-service";
-
-export function PlannerViewShiftService({
+export function PlannerViewEmployee({
+  employee,
   shiftService,
   shifts,
 }: {
+  shifts: Record<string, Shift[]>;
   shiftService: ShiftService;
-  shifts?: Record<string, Shift[]>;
+  employee: Employee;
 }) {
+  const { daysInMonth } = usePlanner();
+
   const locale = useCurrentLocale();
-  const { daysInMonth, company, company_id, workspace_id } = usePlanner();
+  const allShiftsOfCurrentEmployee = shifts && Object.values(shifts)?.flat();
+
+  const shiftsOfShiftService = allShiftsOfCurrentEmployee?.filter(
+    (shift) => shift.shiftService_id === shiftService.id
+  );
+
+  const dayShifts = shiftsOfShiftService?.filter(
+    (shift) => shift.shiftService?.shiftServiceType?.type_name === "Tagdienst"
+  );
+  const nightShifts = shiftsOfShiftService?.filter(
+    (shift) => shift.shiftService?.shiftServiceType?.type_name === "Nachtdienst"
+  );
 
   return (
-    <PlannerRow key={shiftService.id}>
+    <PlannerRow>
       <PlannerRowHeadline>
         <div className="flex items-center justify-between w-full">
           <div>
             <PlannerRowHeadlineTitle>
-              {shiftService.clients
-                ?.map(({ firstname }) => `${firstname}`)
-                .join(", ")}{" "}
-              {shiftService.shiftServiceType?.type_name}
+              {employee.firstname} {employee.lastname}
             </PlannerRowHeadlineTitle>
             <PlannerRowHeadlineSubtitle>
-              {shifts ? Object.keys(shifts).length : 0} / {daysInMonth} Dienste
-              abgedeckt
+              <span>
+                {shiftsOfShiftService?.length || 0} / {daysInMonth} Dienste abgedeckt
+              </span>
+              <span>
+                Tagdienste:
+                {
+                  dayShifts?.filter(
+                    (shift) => shift.shiftService_id === shiftService.id
+                  ).length  || 0
+                }
+                ({dayShifts?.length  || 0})
+              </span>
+              -
+              <span>
+                Nachtdienste:
+                {
+                  nightShifts?.filter(
+                    (shift) => shift.shiftService_id === shiftService.id
+                  ).length  || 0
+                }
+                ({nightShifts?.length || 0})
+              </span>
             </PlannerRowHeadlineSubtitle>
-          </div>
-          <div className="flex items-center pl-3">
-            {shiftService?.clients?.map((client) => (
-              <PlannerRowClientHoverCard key={client.id} client={client}>
-                <Avatar className="h-10 w-10 -ml-3">
-                  <AvatarImage />
-                  <AvatarFallback className="border text-xs border-white">
-                    {client.firstname.charAt(0)}
-                    {client.lastname.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-              </PlannerRowClientHoverCard>
-            ))}
           </div>
         </div>
       </PlannerRowHeadline>
       <PlannerRowContentMonthgridWrapper>
-        <PlannerRowMonthGrid className="w-full">
+        <PlannerRowMonthGrid>
           {Array.from({ length: daysInMonth }).map((_, index) => {
             const date = dayjs().date(index + 1);
             const shiftsForDay = shifts?.[date.format("DD")] ?? [];
@@ -95,17 +106,10 @@ export function PlannerViewShiftService({
                 />
                 <PlannerDayShiftContainer>
                   {isDateSatisfied && (
-                    <PlannerDayShiftItemShiftService
+                    <PlannerDayShiftItemEmployee
                       shiftService={shiftService}
                       date={date}
                       shifts={shiftsForDay}
-                    />
-                  )}
-                  {!isDateSatisfied && (
-                    <PlannerDayAddShift
-                      employees={company?.employees ?? []}
-                      shiftService={shiftService}
-                      date={date}
                     />
                   )}
                 </PlannerDayShiftContainer>
@@ -115,12 +119,7 @@ export function PlannerViewShiftService({
         </PlannerRowMonthGrid>
       </PlannerRowContentMonthgridWrapper>
       <PlannerRowFooter>
-        <Link
-          className={buttonVariants({ variant: "link" })}
-          href={`/${locale}/app/${company_id}/${workspace_id}/${shiftService.id}`}
-        >
-          Zum Dienst <ChevronRight />
-        </Link>
+        <span>Footer</span>
       </PlannerRowFooter>
     </PlannerRow>
   );

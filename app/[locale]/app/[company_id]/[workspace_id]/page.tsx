@@ -2,7 +2,7 @@
 
 import { usePlanner } from "@/components/planner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PlannerRowShiftService } from "@/components/planner/views/shift-service-view";
+import { PlannerViewShiftService } from "@/components/planner/views/shift-service-view";
 
 export default function Page() {
   const { workspace, groupedShifts } = usePlanner();
@@ -17,7 +17,7 @@ export default function Page() {
         </div>
       )}
       {workspace?.shiftServices?.map((shiftService) => (
-        <PlannerRowShiftService
+        <PlannerViewShiftService
           key={shiftService.id}
           shiftService={shiftService}
           shifts={groupedShifts ? groupedShifts[shiftService.id] : {}}

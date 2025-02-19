@@ -24,7 +24,9 @@ export async function getShiftsInRangeForService(
 
   return await supabase
     .from("shifts")
-    .select("*, employee:employees(*)")
+    .select(
+      "*, shiftService:shiftServices(*, clients(*), shiftServiceType(*)), employee:employees(*)"
+    )
     .abortSignal(abortController.signal)
     .gte("date", start.toISOString())
     .lte("date", end.toISOString())
@@ -46,4 +48,20 @@ export async function AddShift(shift: Omit<Shift, "id" | "created_at">) {
   }
 
   return { data: createdShift, error };
+}
+
+export async function deleteShift(shiftId: Shift["id"]) {
+  console.log("deleting shift: ", { shiftId });
+  const { data: shift, error } = await supabase
+    .from("shifts")
+    .delete()
+    .eq("id", shiftId)
+    .select("*");
+
+  if (error) {
+    console.error(error);
+    toast.error(error.message);
+  }
+
+  return { shift, error };
 }

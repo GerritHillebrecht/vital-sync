@@ -1,19 +1,22 @@
+"use client";
+
 import { Employee, Shift, ShiftService } from "@/models";
 
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuTrigger
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import { AddShift } from "@/lib/data-access/client";
 import { Dayjs } from "dayjs";
 import { Plus } from "lucide-react";
+import { usePlanner } from "../../provider";
 
 interface PlannerDayAddShiftProps {
   employees: Employee[];
@@ -47,6 +50,8 @@ export function PlannerDayAddShift({
     AddShift(shift);
   }
 
+  const { groupedShifts } = usePlanner();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -68,17 +73,23 @@ export function PlannerDayAddShift({
               }
               return 0;
             })
-            .map(({ firstname, lastname, id }, index) => (
-              <DropdownMenuItem
-                onClick={() => handleDateClick(date, id)}
-                key={id}
-              >
-                {firstname} {lastname}
-                <DropdownMenuShortcut className="tabular-nums">
-                  ⌘{index + 1}
-                </DropdownMenuShortcut>
-              </DropdownMenuItem>
-            ))}
+            .map(({ firstname, lastname, id }, index) => {
+              const hasShiftSameDay =
+                (groupedShifts?.[id]?.[date.format("DD")]?.length || 0) > 0;
+
+              return (
+                <DropdownMenuItem
+                  disabled={hasShiftSameDay}
+                  onClick={() => handleDateClick(date, id)}
+                  key={id}
+                >
+                  {firstname} {lastname}
+                  <DropdownMenuShortcut className="tabular-nums">
+                    ⌘{index + 1}
+                  </DropdownMenuShortcut>
+                </DropdownMenuItem>
+              );
+            })}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -15,6 +15,10 @@ export function groupShifts(shifts: Shift[]) {
       acc[employee_id] = {};
     }
 
+    if (!acc[employee_id]["all"]) {
+      acc[employee_id]["all"] = [];
+    }
+
     if (!acc[employee_id][day]) {
       acc[employee_id][day] = [];
     }
@@ -27,6 +31,7 @@ export function groupShifts(shifts: Shift[]) {
       acc[shiftService_id][day] = [];
     }
 
+    acc[employee_id]["all"].push(shift);
     acc[employee_id][day].push(shift);
     acc[shiftService_id][day].push(shift);
 

@@ -1,7 +1,8 @@
+import { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { DM_Sans, Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: `${process.env.NEXT_PUBLIC_APP_NAME}`,
@@ -52,7 +53,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="">{children}</main>
+          {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

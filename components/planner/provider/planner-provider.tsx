@@ -25,6 +25,16 @@ import {
   useEffect,
   useState,
 } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
+import {
+  RealtimePostgresChangesPayload,
+  RealtimePostgresDeletePayload,
+  RealtimePostgresInsertPayload,
+  RealtimePostgresUpdatePayload,
+} from "@supabase/supabase-js";
+
+const supabase = createClient();
 
 interface PlannerContextType {
   company_id?: Company["id"];
@@ -92,12 +102,15 @@ export function PlannerContextProvider({
 
     async function fetchCompany(company_id: Company["id"]) {
       const { data: company } = await getCompany(company_id, abortController);
-      
+
       setCompany(company);
       return company;
     }
 
     async function fetchShifts(company_id: Company["id"]) {
+      setShifts([]);
+      setGroupedShifts(null);
+
       const { data: shifts } = await getShiftsInRangeForService(
         startDate,
         endDate,
@@ -110,6 +123,8 @@ export function PlannerContextProvider({
         const groupedShifts = groupShifts(shifts);
         setGroupedShifts(groupedShifts);
       }
+
+      return shifts;
     }
 
     if (company_id) {
@@ -117,7 +132,60 @@ export function PlannerContextProvider({
       fetchShifts(company_id as Company["id"]);
     }
 
-    return () => abortController.abort();
+    const handleInsert = async (
+      payload: RealtimePostgresInsertPayload<Shift>
+    ) => {
+      const shifts = await fetchShifts(company_id as Company["id"]);
+      const newShift = shifts?.find((shift) => shift.id === payload.new.id);
+      const { employee, shiftService, date } = newShift || {};
+
+      toast.success(
+        `${employee?.firstname} arbeitet am ${dayjs(date).locale("de").format("DD. MMM YYYY")} im ${shiftService?.shiftServiceType?.type_name} bei ${shiftService?.clients?.map((client) => client.firstname).join(" und ")}`
+      );
+    };
+
+    const handleUpdate = async (
+      payload: RealtimePostgresUpdatePayload<Shift>
+    ) => {
+      await fetchShifts(company_id as Company["id"]);
+      console.log("shift updated", payload);
+      toast.success(`Shift updated`);
+    };
+
+    const handleDelete = async (
+      payload: RealtimePostgresDeletePayload<Shift>
+    ) => {
+      await fetchShifts(company_id as Company["id"]);
+      console.log("shift deleted", payload);
+      toast.success(`Shift deleted`);
+    };
+
+    const eventHandlers = {
+      INSERT: (payload: RealtimePostgresChangesPayload<Shift>) =>
+        handleInsert(payload as RealtimePostgresInsertPayload<Shift>),
+      UPDATE: (payload: RealtimePostgresChangesPayload<Shift>) =>
+        handleUpdate(payload as RealtimePostgresUpdatePayload<Shift>),
+      DELETE: (payload: RealtimePostgresChangesPayload<Shift>) =>
+        handleDelete(payload as RealtimePostgresDeletePayload<Shift>),
+    } as const;
+
+    const insertSubscription = supabase
+      .channel("shifts")
+      .on<Shift>(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "shifts",
+        },
+        (payload) => eventHandlers[payload.eventType](payload)
+      )
+      .subscribe();
+
+    return () => {
+      abortController.abort();
+      supabase.removeChannel(insertSubscription);
+    };
   }, [company_id, startDate, endDate]);
 
   useEffect(() => {
@@ -129,10 +197,6 @@ export function PlannerContextProvider({
         workspace_id,
         abortController
       );
-
-      // if (error) {
-      //   return toast.error(error.message);
-      // }
 
       setWorkspace(workspace);
 
@@ -155,10 +219,6 @@ export function PlannerContextProvider({
         shiftService_id,
         abortController
       );
-
-      // if (error) {
-      //   return toast.error(error.message);
-      // }
 
       setShiftService(shiftService);
 
@@ -186,8 +246,6 @@ export function PlannerContextProvider({
 
     setDaysInMonth(dayjs(endDate).diff(dayjs(startDate), "day") + 1);
   }, [searchParams]);
-
-  // useEffect(() => {
 
   function updateSearchParams(state: "prev" | "next" | "today") {
     const params = new URLSearchParams(searchParams.toString());

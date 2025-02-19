@@ -3,7 +3,7 @@
 import {
   PlannerDayHeadline,
   PlannerDayShiftContainer,
-  PlannerDayShiftItem,
+  PlannerDayShiftItemEmployee,
   PlannerRow,
   PlannerRowClientHoverCard,
   PlannerRowContentMonthgridWrapper,
@@ -24,7 +24,7 @@ import { useCurrentLocale } from "@/locales/client";
 import { ShiftService, Shift } from "@/models";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { PlannerDayAddShift } from "../../../../../../components/planner/components/day/planner-day-shift-add";
+import { PlannerDayAddShift } from "../../../../../../components/planner/components/day/shift-add";
 
 export function PlannerRowShiftService({
   shiftService,
@@ -95,8 +95,7 @@ export function PlannerRowShiftService({
                 />
                 <PlannerDayShiftContainer>
                   {isDateSatisfied && (
-                    <PlannerDayShiftItem
-                      type="service"
+                    <PlannerDayShiftItemEmployee
                       shiftService={shiftService}
                       date={date}
                       shifts={shiftsForDay}

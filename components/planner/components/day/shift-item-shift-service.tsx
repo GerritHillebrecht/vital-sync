@@ -20,50 +20,28 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import dayjs, { Dayjs } from "@/lib/dayjs";
-import { shiftServiceIcons } from "@/lib/icons";
 import { Shift, ShiftService } from "@/models";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { CalendarIcon } from "lucide-react";
 
 interface PlannerDayShiftItemProps {
   shiftService: ShiftService;
-  type: "employee" | "service";
   date: Dayjs;
   shifts: Shift[];
 }
 
-export function PlannerDayShiftItem({
+export function PlannerDayShiftItemShiftService({
   shiftService,
-  type,
   shifts,
+  date,
 }: PlannerDayShiftItemProps) {
-  const icon_shape = shiftService.icon_shape as keyof typeof shiftServiceIcons;
-  const IconComponent = shiftServiceIcons[icon_shape];
-
-  console.log({ shifts });
+  console.log({ shifts, date: date.toDate() });
 
   return (
     <Sheet>
       <SheetTrigger asChild>
         <div className="absolute cursor-pointer inset-0 flex items-center justify-center lg:hover:bg-muted-foreground/10">
-          {type === "employee" && (
-            <>
-              <IconComponent
-                className="text-cyan-700"
-                color={shiftService.icon_color}
-                size={34}
-                strokeWidth={0.75}
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-[0.5rem]">
-                  {shiftService.shiftServiceType?.type_name.charAt(0)}
-                  {shiftService.clients?.[0].firstname.charAt(0)}
-                  {shiftService.clients?.[0].lastname.charAt(0)}
-                </span>
-              </div>
-            </>
-          )}
-          {type === "service" && (
+          {
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="flex items-center pl-3">
                 {shifts?.map((shift) => (
@@ -119,7 +97,7 @@ export function PlannerDayShiftItem({
                 ))}
               </div>
             </div>
-          )}
+          }
         </div>
       </SheetTrigger>
       <SheetContent>
