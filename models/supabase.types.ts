@@ -17,7 +17,6 @@ export type Database = {
           firstname: string
           id: string
           lastname: string
-          selected_company: string | null
         }
         Insert: {
           auth_id: string
@@ -26,7 +25,6 @@ export type Database = {
           firstname: string
           id?: string
           lastname: string
-          selected_company?: string | null
         }
         Update: {
           auth_id?: string
@@ -35,7 +33,6 @@ export type Database = {
           firstname?: string
           id?: string
           lastname?: string
-          selected_company?: string | null
         }
         Relationships: []
       }
@@ -115,22 +112,37 @@ export type Database = {
       }
       companies: {
         Row: {
+          city: string | null
           company_name: string
+          country: string | null
           created_at: string
           id: string
+          postal_code: string | null
           short_name: string | null
+          street_name: string | null
+          street_number: string | null
         }
         Insert: {
+          city?: string | null
           company_name: string
+          country?: string | null
           created_at?: string
           id?: string
+          postal_code?: string | null
           short_name?: string | null
+          street_name?: string | null
+          street_number?: string | null
         }
         Update: {
+          city?: string | null
           company_name?: string
+          country?: string | null
           created_at?: string
           id?: string
+          postal_code?: string | null
           short_name?: string | null
+          street_name?: string | null
+          street_number?: string | null
         }
         Relationships: []
       }

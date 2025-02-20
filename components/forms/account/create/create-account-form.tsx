@@ -29,6 +29,7 @@ interface AccountFormType {
 
 export function CreateAccountForm({ user }: AccountFormType) {
   const t = useScopedI18n("account.create");
+
   const [state, formAction, pending] = useActionState(createAccount, {
     message: "",
   });
@@ -40,13 +41,12 @@ export function CreateAccountForm({ user }: AccountFormType) {
       lastname: user.user_metadata.display_name ?? "",
       auth_id: user.id,
       avatar: user.user_metadata.avatar_url ?? "",
-      selected_company: "",
     },
   });
 
   return (
     <div>
-      <h1 className="mb-4">{t("headline")}</h1>
+      <h1 className="text-xl lg:text-3xl font-bold mb-8">{t("headline")}</h1>
       <Form {...form}>
         <form action={formAction}>
           <div className="max-w-3xl grid md:grid-cols-2 gap-x-4 gap-y-6 mb-4">
@@ -73,9 +73,7 @@ export function CreateAccountForm({ user }: AccountFormType) {
                       placeholder={t("firstname_placeholder")}
                     />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
+                  <FormDescription>Your given name.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -96,9 +94,7 @@ export function CreateAccountForm({ user }: AccountFormType) {
                       placeholder={t("lastname_placeholder")}
                     />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
+                  <FormDescription>Your family name.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -128,7 +124,7 @@ export function CreateAccountForm({ user }: AccountFormType) {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="selected_company"
               render={({ field }) => (
@@ -143,20 +139,16 @@ export function CreateAccountForm({ user }: AccountFormType) {
                       placeholder={t("avatar")}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Link to an external unsplash file. Hosting will be added
-                    soon. Sources other than unsplash are not supported for
-                    security reasons.
-                  </FormDescription>
+                  <FormDescription></FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="auth_id"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="hidden">
                   <FormLabel>Auth_id</FormLabel>
                   <FormControl>
                     <Input
@@ -167,11 +159,11 @@ export function CreateAccountForm({ user }: AccountFormType) {
                       placeholder={t("avatar")}
                     />
                   </FormControl>
-                  <FormDescription>
+                  {/* <FormDescription>
                     Link to an external unsplash file. Hosting will be added
                     soon. Sources other than unsplash are not supported for
                     security reasons.
-                  </FormDescription>
+                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}

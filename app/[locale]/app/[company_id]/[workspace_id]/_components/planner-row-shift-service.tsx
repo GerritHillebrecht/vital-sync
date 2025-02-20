@@ -71,7 +71,7 @@ export function PlannerRowShiftService({
         <PlannerRowMonthGrid className="w-full">
           {Array.from({ length: daysInMonth }).map((_, index) => {
             const date = dayjs().date(index + 1);
-            const shiftsForDay = shifts?.[date.format("DD")] ?? [];
+            const shiftsForDay = shifts?.[date.format("MM-DD")] ?? [];
             const isDateSatisfied = shiftsForDay.length > 0;
 
             return (
@@ -88,6 +88,7 @@ export function PlannerRowShiftService({
                 <PlannerDayHeadline
                   date={date}
                   satisfied={isDateSatisfied}
+                  shiftService={shiftService}
                   className={cn(
                     "border-b",
                     date.locale(locale).weekday() === 0 && "bg-primary/10"

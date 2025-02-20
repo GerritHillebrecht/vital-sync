@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/client";
 import { Account } from "@/models";
 import { User } from "@supabase/supabase-js";
+import { redirect } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const supabase = createClient();
@@ -12,6 +13,7 @@ interface AccountContextType {
   setUser: (user: User) => void;
 
   account: Account | null;
+  accountIsLoading: boolean;
   setAccount: (account: Account) => void;
 }
 
@@ -19,17 +21,14 @@ const AccountContext = createContext<AccountContextType | undefined>(undefined);
 
 interface AccountContextProviderProps {
   children: React.ReactNode;
-  // user: AccountContextType["user"];
-  // account: AccountContextType["account"];
 }
 
 export function AccountContextProvider({
   children,
-  // user: initialUser,
-  // account: initialAccount,
 }: AccountContextProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [account, setAccount] = useState<Account | null>(null);
+  const [accountIsLoading, setAccountIsLoading] = useState(true);
 
   useEffect(() => {
     async function getUser() {
@@ -46,13 +45,24 @@ export function AccountContextProvider({
   useEffect(() => {
     async function getAccount() {
       if (user) {
+        setAccountIsLoading(true);
         const { data: account, error } = await supabase
           .from("accounts")
-          .select("*, companies(*, workspaces(*, shiftServices(*, clients(*)), workspaceType:workspaceTypes(*), clients(*)))")
-          // .eq("auth_id", user.id)
+          .select(
+            "*, companies(*, workspaces(*, shiftServices(*, clients(*)), workspaceType:workspaceTypes(*), clients(*)))"
+          )
           .single();
 
         setAccount(account);
+        setAccountIsLoading(false);
+
+        if (!account) {
+          redirect("/account/create");
+        }
+
+        if (!account?.companies) {
+          redirect("/app/company/create");
+        }
       }
     }
 
@@ -61,7 +71,13 @@ export function AccountContextProvider({
     }
   }, [user]);
 
-  const value: AccountContextType = { user, account, setUser, setAccount };
+  const value: AccountContextType = {
+    user,
+    account,
+    accountIsLoading,
+    setUser,
+    setAccount,
+  };
 
   return (
     <AccountContext.Provider value={value}>{children}</AccountContext.Provider>

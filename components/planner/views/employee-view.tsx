@@ -15,6 +15,7 @@ import {
   PlannerRowHeadlineSubtitle,
   PlannerRowHeadlineTitle,
   PlannerRowMonthGrid,
+  PlannerDayAddShiftEmployee,
 } from "../components";
 import { usePlanner } from "../provider";
 
@@ -30,16 +31,12 @@ export function PlannerViewEmployee({
   const { daysInMonth } = usePlanner();
 
   const locale = useCurrentLocale();
-  const allShiftsOfCurrentEmployee = shifts && Object.values(shifts)?.flat();
+  const allShiftsOfCurrentEmployee = shifts["all"] ?? [];
 
-  const shiftsOfShiftService = allShiftsOfCurrentEmployee?.filter(
-    (shift) => shift.shiftService_id === shiftService.id
-  );
-
-  const dayShifts = shiftsOfShiftService?.filter(
+  const dayShifts = allShiftsOfCurrentEmployee?.filter(
     (shift) => shift.shiftService?.shiftServiceType?.type_name === "Tagdienst"
   );
-  const nightShifts = shiftsOfShiftService?.filter(
+  const nightShifts = allShiftsOfCurrentEmployee?.filter(
     (shift) => shift.shiftService?.shiftServiceType?.type_name === "Nachtdienst"
   );
 
@@ -52,28 +49,7 @@ export function PlannerViewEmployee({
               {employee.firstname} {employee.lastname}
             </PlannerRowHeadlineTitle>
             <PlannerRowHeadlineSubtitle>
-              <span>
-                {shiftsOfShiftService?.length || 0} / {daysInMonth} Dienste abgedeckt
-              </span>
-              <span>
-                Tagdienste:
-                {
-                  dayShifts?.filter(
-                    (shift) => shift.shiftService_id === shiftService.id
-                  ).length  || 0
-                }
-                ({dayShifts?.length  || 0})
-              </span>
-              -
-              <span>
-                Nachtdienste:
-                {
-                  nightShifts?.filter(
-                    (shift) => shift.shiftService_id === shiftService.id
-                  ).length  || 0
-                }
-                ({nightShifts?.length || 0})
-              </span>
+              {dayShifts.length} Tagdienste, {nightShifts.length} Nachtdienste
             </PlannerRowHeadlineSubtitle>
           </div>
         </div>
@@ -82,7 +58,7 @@ export function PlannerViewEmployee({
         <PlannerRowMonthGrid>
           {Array.from({ length: daysInMonth }).map((_, index) => {
             const date = dayjs().date(index + 1);
-            const shiftsForDay = shifts?.[date.format("DD")] ?? [];
+            const shiftsForDay = shifts?.[date.format("MM-DD")] ?? [];
             const isDateSatisfied = shiftsForDay.length > 0;
 
             return (
@@ -99,6 +75,7 @@ export function PlannerViewEmployee({
                 <PlannerDayHeadline
                   date={date}
                   satisfied={isDateSatisfied}
+                  shiftService={shiftService}
                   className={cn(
                     "border-b",
                     date.locale(locale).weekday() === 0 && "bg-primary/10"
@@ -112,6 +89,13 @@ export function PlannerViewEmployee({
                       shifts={shiftsForDay}
                     />
                   )}
+                  {!isDateSatisfied && (
+                    <PlannerDayAddShiftEmployee
+                      employee={employee}
+                      shiftService={shiftService}
+                      date={date}
+                    />
+                  )}
                 </PlannerDayShiftContainer>
               </div>
             );
@@ -119,7 +103,8 @@ export function PlannerViewEmployee({
         </PlannerRowMonthGrid>
       </PlannerRowContentMonthgridWrapper>
       <PlannerRowFooter>
-        <span>Footer</span>
+        {/* <span>Footer</span> */}
+        <span></span>
       </PlannerRowFooter>
     </PlannerRow>
   );

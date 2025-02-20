@@ -1,10 +1,16 @@
 import { CreateWorkspaceForm } from "@/components/forms";
+import { Company } from "@/models";
 
-export default function Page() {
+interface PageProps {
+  params: Promise<{ company_id: Company["id"] }>;
+}
+
+export default async function Page({ params }: PageProps) {
+  const { company_id } = await params;
   return (
     <div>
-      Create a workspace
-      <CreateWorkspaceForm />
+      Your first workspace
+      <CreateWorkspaceForm company_id={company_id} />
     </div>
   );
 }

@@ -29,7 +29,6 @@ export default async function Page() {
               <CreateAccountForm user={user} />
             </div>
             <CanvasComponent />
-            {/* <Lanyard /> */}
           </div>
         </div>
       </section>

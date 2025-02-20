@@ -22,7 +22,7 @@ export default function Page() {
   } = usePlanner();
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-4 pb-8">
       <div>
         <Link
           className="inline"

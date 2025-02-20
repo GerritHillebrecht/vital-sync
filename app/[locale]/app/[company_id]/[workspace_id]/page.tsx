@@ -3,9 +3,14 @@
 import { usePlanner } from "@/components/planner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlannerViewShiftService } from "@/components/planner/views/shift-service-view";
+import { redirect } from "next/navigation";
 
 export default function Page() {
-  const { workspace, groupedShifts } = usePlanner();
+  const { company_id, workspace_id, workspace, groupedShifts } = usePlanner();
+
+  if (workspace && !workspace.clients?.length) {
+    redirect(`/app/${company_id}/${workspace_id}/clients/create`);
+  }
 
   return (
     <>

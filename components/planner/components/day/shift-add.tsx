@@ -75,7 +75,7 @@ export function PlannerDayAddShift({
             })
             .map(({ firstname, lastname, id }, index) => {
               const hasShiftSameDay =
-                (groupedShifts?.[id]?.[date.format("DD")]?.length || 0) > 0;
+                (groupedShifts?.[id]?.[date.format("MM-DD")]?.length || 0) > 0;
 
               return (
                 <DropdownMenuItem

@@ -11,6 +11,19 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 import { deleteShift } from "@/lib/data-access/client";
 import dayjs, { Dayjs } from "@/lib/dayjs";
 import { shiftServiceIcons } from "@/lib/icons";
@@ -101,12 +114,32 @@ export function PlannerDayShiftItemEmployee({
             </SheetDescription>
           </SheetHeader>
 
-          <SheetFooter className="sm:justify-start">
+          <SheetFooter className="sm:justify-start mt-4">
             <SheetClose asChild>
-              {/* <Button type="submit">Save changes</Button> */}
-              <Button onClick={() => handleDeleteShift(shift)} type="submit">
-                Delete Shift
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button type="submit">Delete Shift</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      the shift for <strong>{shift.employee?.firstname}</strong> on the{" "}
+                      <strong>{shift.shiftService?.shiftServiceType?.type_name}</strong> shift on{" "}
+                      <strong>{dayjs(shift.date).format("DD.MM.YYYY")}</strong>.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => handleDeleteShift(shift)}>
+                      Continue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </SheetClose>
           </SheetFooter>
         </SheetContent>

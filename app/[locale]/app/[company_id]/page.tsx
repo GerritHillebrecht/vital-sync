@@ -1,28 +1,34 @@
-import { getWorkspaces } from "@/lib/data-access";
-import { getCurrentLocale } from "@/locales/server";
+"use client";
+
+import { usePlanner } from "@/components/planner";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ company_id: string }>;
-}) {
-  const locale = await getCurrentLocale();
-  const { company_id } = await params;
-  const { data: workspaces } = await getWorkspaces(company_id);
+export default function Page() {
+  const { company_id, company } = usePlanner();
 
-  if (!workspaces?.length) {
-    return redirect(`/${locale}/app/${company_id}/workspace/create`);
+  // Guard clauses
+  if (company) {
+    if (!company.employees?.length) {
+      return redirect(`/app/${company_id}/employees`);
+    }
+
+    if (!company.workspaces?.length) {
+      return redirect(`/app/${company_id}/workspace/create`);
+    }
+
+    if (company.workspaces?.length === 1) {
+      return redirect(`/app/${company_id}/${company.workspaces[0].id}`);
+    }
   }
 
   return (
     <div>
       <h1>Workspaces</h1>
       <ul>
-        {workspaces?.map((workspace) => (
+        {company?.workspaces?.map((workspace) => (
           <li key={workspace.id}>
-            <Link href={`/${locale}/app/${company_id}/${workspace.id}`}>
+            <Link href={`/app/${company_id}/${workspace.id}`}>
               {workspace.workspace_name}
             </Link>
           </li>

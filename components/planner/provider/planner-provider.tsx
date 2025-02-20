@@ -112,8 +112,8 @@ export function PlannerContextProvider({
       setGroupedShifts(null);
 
       const { data: shifts } = await getShiftsInRangeForService(
-        startDate,
-        endDate,
+        dayjs(startDate).subtract(1, "day").toDate(),
+        dayjs(endDate).add(1, "day").toDate(),
         company_id,
         abortController
       );

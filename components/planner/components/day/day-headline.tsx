@@ -3,25 +3,32 @@
 import { cn } from "@/lib/utils";
 import { useCurrentLocale } from "@/locales/client";
 import { Dayjs } from "@/lib/dayjs";
+import { ShiftService } from "@/models";
 
 interface PlannerDayHeadlineProps {
   date: Dayjs;
   satisfied: boolean;
   className?: string;
+  shiftService: ShiftService;
 }
 
 export function PlannerDayHeadline({
   date,
   satisfied,
   className,
+  shiftService,
 }: PlannerDayHeadlineProps) {
   const locale = useCurrentLocale();
+  const isShiftServiceRequired = shiftService.weekdays.includes(
+    date.day().toString()
+  );
 
   return (
     <div
       className={cn(
         "group relative flex p-1 flex-col items-center gap-[0.2rem] justify-around",
-        className
+        className,
+        !isShiftServiceRequired && "bg-neutral-900"
       )}
     >
       <p className="text-xs opacity-50 text-center leading-none">
@@ -34,9 +41,11 @@ export function PlannerDayHeadline({
       <div
         className={cn(
           "rounded h-1 w-3 group-hover:shadow-sm transition-shadow duration-200",
-          satisfied
-            ? "bg-green-400 group-hover:shadow-green-400"
-            : "bg-orange-400 group-hover:shadow-orange-400"
+          isShiftServiceRequired
+            ? satisfied
+              ? "bg-green-400 group-hover:shadow-green-400"
+              : "bg-orange-400 group-hover:shadow-orange-400"
+            : "bg-transparent"
         )}
       ></div>
     </div>
