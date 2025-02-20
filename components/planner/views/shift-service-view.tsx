@@ -23,7 +23,7 @@ import { useCurrentLocale } from "@/locales/client";
 import { Shift, ShiftService } from "@/models";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { PlannerDayAddShift } from "../components/day/shift-add";
+import { PlannerDayAddShift } from "../components/day/shift-add-shift-service";
 import { PlannerDayShiftItemShiftService } from "../components/day/shift-item-shift-service";
 
 export function PlannerViewShiftService({

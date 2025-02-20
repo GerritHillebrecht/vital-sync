@@ -13,6 +13,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { checkEmployeeDate } from "@/lib/utils";
 
 interface PlannerDayAddShiftProps {
   shiftService: ShiftService;
@@ -47,44 +48,17 @@ export function PlannerDayAddShiftEmployee({
   }
 
   const { groupedShifts } = usePlanner();
-  const isShiftServiceSatisfied =
-    (groupedShifts?.[shiftService.id]?.[date.format("MM-DD")]?.length ?? 0) > 0;
-  const previousDay = date.subtract(1, "day");
-  const nextDay = date.add(1, "day");
-
-  const shiftsOfPreviousDay =
-    groupedShifts?.[employee.id]?.[previousDay.format("MM-DD")];
-
-  const shiftsOfNextDay =
-    groupedShifts?.[employee.id]?.[nextDay.format("MM-DD")];
-
-  const isBlockedByPreviousDay =
-    shiftService.shiftServiceType?.type_name === "Tagdienst" &&
-    shiftsOfPreviousDay?.some(
-      (shift) =>
-        shift.shiftService?.shiftServiceType?.type_name === "Nachtdienst"
-    );
-
-  const isBlockedByNextDay =
-    shiftService.shiftServiceType?.type_name === "Nachtdienst" &&
-    shiftsOfNextDay?.some(
-      (shift) => shift.shiftService?.shiftServiceType?.type_name === "Tagdienst"
-    );
-
-  const isShiftServiceNotRequired = !shiftService.weekdays?.includes(
-    date.day().toString()
-  );
-
-  const addable = ![
-    isShiftServiceSatisfied,
-    isBlockedByPreviousDay,
+  const {
+    isAddable,
     isBlockedByNextDay,
+    isBlockedByPreviousDay,
     isShiftServiceNotRequired,
-  ].some(Boolean);
+    isShiftServiceSatisfied,
+  } = checkEmployeeDate({ employee, shiftService, groupedShifts, date });
 
   return (
     <>
-      {!addable && (
+      {!isAddable && (
         <div className="group cursor-pointer absolute inset-0 flex items-center justify-center">
           <HoverCard>
             <HoverCardTrigger>
@@ -135,7 +109,7 @@ export function PlannerDayAddShiftEmployee({
           </HoverCard>
         </div>
       )}
-      {addable && (
+      {isAddable && (
         <div
           onClick={handleDateClick}
           className="group cursor-pointer absolute inset-0 flex items-center justify-center"

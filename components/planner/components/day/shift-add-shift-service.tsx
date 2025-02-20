@@ -17,6 +17,7 @@ import { AddShift } from "@/lib/data-access/client";
 import { Dayjs } from "dayjs";
 import { Plus } from "lucide-react";
 import { usePlanner } from "../../provider";
+import { checkEmployeeDate } from "@/lib/utils";
 
 interface PlannerDayAddShiftProps {
   employees: Employee[];
@@ -73,13 +74,18 @@ export function PlannerDayAddShift({
               }
               return 0;
             })
-            .map(({ firstname, lastname, id }, index) => {
-              const hasShiftSameDay =
-                (groupedShifts?.[id]?.[date.format("MM-DD")]?.length || 0) > 0;
+            .map((employee, index) => {
+              const { firstname, lastname, id } = employee;
+              const { isAddable } = checkEmployeeDate({
+                employee,
+                shiftService,
+                groupedShifts,
+                date,
+              });
 
               return (
                 <DropdownMenuItem
-                  disabled={hasShiftSameDay}
+                  disabled={!isAddable}
                   onClick={() => handleDateClick(date, id)}
                   key={id}
                 >
