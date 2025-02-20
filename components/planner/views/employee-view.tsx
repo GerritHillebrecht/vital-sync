@@ -31,7 +31,7 @@ export function PlannerViewEmployee({
   const { daysInMonth } = usePlanner();
 
   const locale = useCurrentLocale();
-  const allShiftsOfCurrentEmployee = shifts["all"] ?? [];
+  const allShiftsOfCurrentEmployee = shifts?.["all"] ?? [];
 
   const dayShifts = allShiftsOfCurrentEmployee?.filter(
     (shift) => shift.shiftService?.shiftServiceType?.type_name === "Tagdienst"

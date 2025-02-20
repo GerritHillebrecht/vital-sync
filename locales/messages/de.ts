@@ -1,3 +1,5 @@
+import { create } from "domain";
+
 export default {
   localeName: "Deutsch",
   localeSelectorDescription: "Wähle deine Sprache",
@@ -76,12 +78,26 @@ export default {
   },
   workspace: {
     create: {
-      headline: "Erstelle deine erste Versorgung",
+      headline: "Erstelle eine Versorgung",
       cta: "Versorgung erstellen",
       workspace_name: "Versorgungsname",
       workspace_name_placeholder: "ACME Inc.",
       workspace_type: "Vorsorguns-typ",
       workspace_type_placeholder: "eg. Wohngemeinschft",
+    },
+  },
+  shiftService: {
+    create: {
+      headline: "Erstelle einen neuen Dienst",
+      cta: "Dienst erstellen",
+      service_name: "Dienstname",
+      service_name_placeholder: "Frühschicht",
+      weekdays: "Wochentage",
+      weekdays_placeholder: "0,1,2,3,4,5,6",
+      shift_service_type_id: "Diensttyp",
+      shift_service_type_placeholder: "zB. Nachtdienst",
+      icon_shape: "Form",
+      icon_color: "Farbe",
     },
   },
   hello: "Hallo",

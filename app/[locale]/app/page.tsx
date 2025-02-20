@@ -8,11 +8,11 @@ import { Companies } from "./_components/companies-selector";
 export default function Page() {
   const { accountIsLoading, account } = useAccount();
 
-  if (account && (account?.companies?.length || 0) === 0) {
+  if (account && (account.companies?.length || 0) === 0) {
     return redirect("/app/company/create");
   }
 
-  if (account?.companies?.length === 1) {
+  if (account && account.companies?.length === 1) {
     return redirect(`/app/${account.companies[0].id}`);
   }
 

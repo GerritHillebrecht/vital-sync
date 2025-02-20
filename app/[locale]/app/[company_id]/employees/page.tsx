@@ -3,7 +3,7 @@
 import { usePlanner } from "@/components/planner";
 import { EmployeeCard } from "../../_components/employee_card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreateEmployeeForm } from "@/components/forms/employee/create-employee-form";
+import { CreateEmployeeForm } from "@/components/forms/employee/create/employee-form";
 import { useScopedI18n } from "@/locales/client";
 
 export default function Page() {

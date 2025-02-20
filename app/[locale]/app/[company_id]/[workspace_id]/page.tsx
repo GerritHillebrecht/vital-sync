@@ -8,8 +8,13 @@ import { redirect } from "next/navigation";
 export default function Page() {
   const { company_id, workspace_id, workspace, groupedShifts } = usePlanner();
 
+
   if (workspace && !workspace.clients?.length) {
     redirect(`/app/${company_id}/${workspace_id}/clients/create`);
+  }
+
+  if (workspace && !workspace.shiftServices?.length) {
+    redirect(`/app/${company_id}/${workspace_id}/shift-services/create`);
   }
 
   return (

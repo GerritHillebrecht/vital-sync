@@ -28,7 +28,7 @@ export function PlannerDayHeadline({
       className={cn(
         "group relative flex p-1 flex-col items-center gap-[0.2rem] justify-around",
         className,
-        !isShiftServiceRequired && "bg-neutral-900"
+        !isShiftServiceRequired && "bg-foreground/5"
       )}
     >
       <p className="text-xs opacity-50 text-center leading-none">

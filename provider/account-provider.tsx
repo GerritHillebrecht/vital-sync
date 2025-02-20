@@ -49,7 +49,7 @@ export function AccountContextProvider({
         const { data: account, error } = await supabase
           .from("accounts")
           .select(
-            "*, companies(*, workspaces(*, shiftServices(*, clients(*)), workspaceType:workspaceTypes(*), clients(*)))"
+            "*, companies(*, workspaces(*, shiftServices(*, clients(*)), workspaceType:workspaceTypes(*), clients!clients_workspace_id_fkey(*)))"
           )
           .single();
 

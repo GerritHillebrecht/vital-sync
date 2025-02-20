@@ -1,36 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-import { deleteShift } from "@/lib/data-access/client";
-import dayjs, { Dayjs } from "@/lib/dayjs";
+import { shiftServiceColors } from "@/lib/colors";
+import { Dayjs } from "@/lib/dayjs";
 import { shiftServiceIcons } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Shift, ShiftService } from "@/models";
-import { Calendar, SquareChartGantt } from "lucide-react";
-import { toast } from "sonner";
+import { PlannerDayShiftSheet } from "./shift-sheet";
 
 interface PlannerDayShiftItemProps {
   shiftService: ShiftService;
@@ -42,19 +17,6 @@ export function PlannerDayShiftItemEmployee({
   shiftService,
   shifts,
 }: PlannerDayShiftItemProps) {
-  async function handleDeleteShift(shiftToDelete: Shift) {
-    const { error } = await deleteShift(shiftToDelete.id);
-
-    if (error) {
-      console.error(error);
-      return toast.error(error.message);
-    }
-
-    toast.success(
-      `${shiftToDelete.employee?.firstname} won't be working on the ${shiftToDelete.shiftService?.shiftServiceType?.type_name} shift on ${dayjs(shiftToDelete.date).format("DD.MM.YYYY")}`
-    );
-  }
-
   return shifts?.map((shift) => {
     const IconComponent =
       shiftServiceIcons[
@@ -62,88 +24,38 @@ export function PlannerDayShiftItemEmployee({
       ];
 
     return (
-      <Sheet key={shift.id}>
-        <SheetTrigger asChild>
-          <div className="absolute cursor-pointer inset-0 flex items-center justify-center lg:hover:bg-muted-foreground/10">
-            <div key={shift.id}>
-              <IconComponent
-                color={shift.shiftService?.icon_color}
-                size={34}
-                strokeWidth={0.75}
-                className={cn(
-                  shiftService.id !== shift.shiftService_id &&
-                    "opacity-10 mix-blend-multiply"
-                )}
-              />
-              <div
-                className={cn(
-                  "absolute inset-0 flex items-center justify-center",
-                  shiftService.id !== shift.shiftService_id && "opacity-40"
-                )}
-              >
-                <span className="text-[0.5rem]">
-                  {shift.shiftService?.shiftServiceType?.type_name.charAt(0)}
-                  {shift.shiftService?.clients?.[0].firstname.charAt(0)}
-                  {shift.shiftService?.clients?.[0].lastname.charAt(0)}
-                </span>
-              </div>
+      <PlannerDayShiftSheet shift={shift} key={shift.id}>
+        <div className="absolute cursor-pointer inset-0 flex items-center justify-center lg:hover:bg-muted-foreground/10">
+          <div key={shift.id}>
+            <IconComponent
+              color={
+                shiftServiceColors[
+                  (shift.shiftService
+                    ?.icon_color as keyof typeof shiftServiceColors) ?? "rose"
+                ]
+              }
+              size={34}
+              strokeWidth={0.75}
+              className={cn(
+                shiftService.id !== shift.shiftService_id &&
+                  "opacity-10 mix-blend-multiply"
+              )}
+            />
+            <div
+              className={cn(
+                "absolute inset-0 flex items-center justify-center",
+                shiftService.id !== shift.shiftService_id && "opacity-40"
+              )}
+            >
+              <span className="text-[0.5rem]">
+                {shift.shiftService?.shiftServiceType?.type_name.charAt(0)}
+                {shift.shiftService?.clients?.[0].firstname.charAt(0)}
+                {shift.shiftService?.clients?.[0].lastname.charAt(0)}
+              </span>
             </div>
           </div>
-        </SheetTrigger>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>
-              {shift.employee?.firstname} {shift.employee?.lastname}
-            </SheetTitle>
-            <SheetDescription className="flex items-center gap-x-1">
-              <SquareChartGantt size={16} />
-              <span>
-                {shift.shiftService?.clients
-                  ?.map(({ firstname }) => firstname)
-                  .join(", ")}{" "}
-                {shift.shiftService?.shiftServiceType?.type_name}
-              </span>
-            </SheetDescription>
-            <SheetDescription className="flex items-center gap-x-1">
-              <Calendar size={16} />
-              <span>
-                {dayjs(shift.date).format("DD.MM.YYYY")} -{" "}
-                {shift.shiftService?.shiftServiceType?.start_time} -{" "}
-                {shift.shiftService?.shiftServiceType?.end_time}
-              </span>
-            </SheetDescription>
-          </SheetHeader>
-
-          <SheetFooter className="sm:justify-start mt-4">
-            <SheetClose asChild>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button type="submit">Delete Shift</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      the shift for <strong>{shift.employee?.firstname}</strong> on the{" "}
-                      <strong>{shift.shiftService?.shiftServiceType?.type_name}</strong> shift on{" "}
-                      <strong>{dayjs(shift.date).format("DD.MM.YYYY")}</strong>.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => handleDeleteShift(shift)}>
-                      Continue
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </SheetClose>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+        </div>
+      </PlannerDayShiftSheet>
     );
   });
 }

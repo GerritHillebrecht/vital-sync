@@ -206,47 +206,6 @@ export type Database = {
         }
         Relationships: []
       }
-      serviceRequirements: {
-        Row: {
-          client_id: string
-          created_at: string
-          days_of_week: string
-          end_time: string
-          icon: string | null
-          id: string
-          service_name: string
-          start_time: string
-        }
-        Insert: {
-          client_id: string
-          created_at?: string
-          days_of_week: string
-          end_time: string
-          icon?: string | null
-          id?: string
-          service_name: string
-          start_time: string
-        }
-        Update: {
-          client_id?: string
-          created_at?: string
-          days_of_week?: string
-          end_time?: string
-          icon?: string | null
-          id?: string
-          service_name?: string
-          start_time?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "serviceRequirements_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "clients"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       shifts: {
         Row: {
           created_at: string
@@ -295,37 +254,28 @@ export type Database = {
       shiftServices: {
         Row: {
           created_at: string
-          end_time: string
           icon_color: string
           icon_shape: string
           id: string
-          service_name: string
           shift_service_type_id: string
-          start_time: string
           weekdays: string
           workspace_id: string
         }
         Insert: {
           created_at?: string
-          end_time: string
           icon_color?: string
           icon_shape?: string
           id?: string
-          service_name: string
           shift_service_type_id: string
-          start_time: string
           weekdays: string
           workspace_id: string
         }
         Update: {
           created_at?: string
-          end_time?: string
           icon_color?: string
           icon_shape?: string
           id?: string
-          service_name?: string
           shift_service_type_id?: string
-          start_time?: string
           weekdays?: string
           workspace_id?: string
         }
@@ -403,68 +353,6 @@ export type Database = {
         }
         Relationships: []
       }
-      teammembers: {
-        Row: {
-          created_at: string
-          employee_id: string
-          team_id: string
-        }
-        Insert: {
-          created_at?: string
-          employee_id: string
-          team_id: string
-        }
-        Update: {
-          created_at?: string
-          employee_id?: string
-          team_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "teammembers_employee_id_fkey"
-            columns: ["employee_id"]
-            isOneToOne: false
-            referencedRelation: "employees"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "teammembers_team_id_fkey"
-            columns: ["team_id"]
-            isOneToOne: false
-            referencedRelation: "teams"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      teams: {
-        Row: {
-          client_id: string
-          created_at: string
-          id: string
-          team_name: string
-        }
-        Insert: {
-          client_id: string
-          created_at?: string
-          id?: string
-          team_name: string
-        }
-        Update: {
-          client_id?: string
-          created_at?: string
-          id?: string
-          team_name?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "teams_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "clients"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       workspaces: {
         Row: {
           company_id: string
@@ -489,17 +377,17 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "workspace_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "workspace_workspace_type_fkey"
             columns: ["workspace_type_id"]
             isOneToOne: false
             referencedRelation: "workspaceTypes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workspaces_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
             referencedColumns: ["id"]
           },
         ]

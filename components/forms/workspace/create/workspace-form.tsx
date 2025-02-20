@@ -54,6 +54,8 @@ export function CreateWorkspaceForm({ company_id }: WorkspaceFormProps) {
     }
 
     fetchWorkspaceTypes();
+
+    return () => abortController.abort();
   }, []);
 
   const t = useScopedI18n("workspace.create");
@@ -76,7 +78,6 @@ export function CreateWorkspaceForm({ company_id }: WorkspaceFormProps) {
   return (
     <div className="relative">
       <h1 className="mb-8 text-2xl lg:text-3xl font-bold">{t("headline")}</h1>
-      {JSON.stringify(form)}
       <Form {...form}>
         <form action={formAction} className="max-w-2xl">
           <div className="grid md:grid-cols-2 gap-x-4 gap-y-6 mb-4">

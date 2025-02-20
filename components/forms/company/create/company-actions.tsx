@@ -3,7 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { Company } from "@/models";
 import { redirect } from "next/navigation";
-import { companyFormSchema } from "./schema";
+import { companyFormSchema } from "./company-schema";
 import { getCurrentLocale } from "@/locales/server";
 import { getAccountByAuthID, getUser } from "@/lib/data-access";
 
@@ -13,9 +13,10 @@ export async function createCompany(
 ) {
   const locale = await getCurrentLocale();
   const formObject = Object.fromEntries(formData.entries());
-  const formattedData = { ...formObject, selected_company: null };
+  const formattedData = { ...formObject };
   const result = companyFormSchema.safeParse(formattedData);
-
+  console.log({ formattedData });
+  console.log({ error: result.error });
   if (!result.success) {
     return {
       message: "Formdata could not be parsed.",
@@ -54,7 +55,7 @@ export async function createCompany(
   console.log({ company, error });
 
   if (error || !company) {
-    return { message: error?.message ?? "" };
+    return { message: error?.message ?? "" , errors: null };
   }
 
   const { data, error: companyError } = await supabase
@@ -67,7 +68,7 @@ export async function createCompany(
     .single();
 
   if (companyError || !data) {
-    return { message: companyError.message };
+    return { message: companyError.message, errors: undefined };
   }
 
   return redirect(`/${locale}/app/${company.id}/workspace/create`);

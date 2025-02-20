@@ -1,15 +1,8 @@
-import { CreateWorkspaceForm } from "@/components/forms";
-import { Company } from "@/models";
+import { CreateCompanyForm } from "@/components/forms";
 import HeroImage from "@/public/images/hostpital_background.jpg";
 import Image from "next/image";
 
-interface PageProps {
-  params: Promise<{ company_id: Company["id"] }>;
-}
-
-export default async function Page({ params }: PageProps) {
-  const { company_id } = await params;
-
+export default async function Page() {
   return (
     <main className="py-10 relative">
       <div className="absolute inset-0 overflow-hidden">
@@ -22,7 +15,7 @@ export default async function Page({ params }: PageProps) {
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background to-transparent" />
       </div>
       <div className="container mx-auto">
-        <CreateWorkspaceForm company_id={company_id} />
+        <CreateCompanyForm />
       </div>
     </main>
   );

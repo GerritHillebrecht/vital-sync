@@ -19,13 +19,14 @@ import { Loader, TriangleAlert } from "lucide-react";
 import { useActionState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createCompany } from "./actions";
-import { companyFormSchema } from "./schema";
+import { createCompany } from "./company-actions";
+import { companyFormSchema } from "./company-schema";
 
 export function CreateCompanyForm() {
   const t = useScopedI18n("company.create");
   const [state, formAction, pending] = useActionState(createCompany, {
     message: "",
+    errors: null,
   });
 
   const form = useForm<z.infer<typeof companyFormSchema>>({
@@ -37,7 +38,7 @@ export function CreateCompanyForm() {
       street_number: "",
       postal_code: "",
       city: "",
-      country: "",
+      country: "Germany",
     },
   });
 
@@ -51,7 +52,9 @@ export function CreateCompanyForm() {
               <Alert className="mb-4 md:col-span-2">
                 <TriangleAlert className="h-4 w-4" />
                 <AlertTitle>Sign-in failed.</AlertTitle>
-                <AlertDescription>{state.message}</AlertDescription>
+                <AlertDescription>
+                  {state.message} - {JSON.stringify(state.errors)}
+                </AlertDescription>
               </Alert>
             )}
             <FormField
@@ -147,7 +150,6 @@ export function CreateCompanyForm() {
                       {...field}
                       value={field.value ?? ""}
                       required
-                      minLength={2}
                       type="text"
                       autoComplete="family-name"
                       placeholder={t("street_number_placeholder")}
@@ -199,6 +201,30 @@ export function CreateCompanyForm() {
                       type="text"
                       autoComplete="family-name"
                       placeholder={t("city_placeholder")}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("country")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      value={field.value ?? ""}
+                      required
+                      minLength={2}
+                      type="text"
+                      autoComplete="family-name"
+                      placeholder={t("country_placeholder")}
                     />
                   </FormControl>
                   <FormDescription>
