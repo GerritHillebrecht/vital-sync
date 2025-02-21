@@ -52,52 +52,57 @@ export function PlannerDayAddShift({
   }
 
   const { groupedShifts } = usePlanner();
+  const isShiftServiceRequired = shiftService.weekdays?.includes(
+    date.day().toString()
+  );
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <div className="group cursor-pointer absolute inset-0 flex items-center justify-center">
-          <Plus className="aspect-square w-2 h-2 opacity-20 group-hover:opacity-100 group-hover:w-5 group-hover:h-5 transition-all duration-200" />
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Employee</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          {employees
-            .sort((a, b) => {
-              if (a.firstname < b.firstname) {
-                return -1;
-              }
-              if (a.firstname > b.firstname) {
-                return 1;
-              }
-              return 0;
-            })
-            .map((employee, index) => {
-              const { firstname, lastname, id } = employee;
-              const { isAddable } = checkEmployeeDate({
-                employee,
-                shiftService,
-                groupedShifts,
-                date,
-              });
+    isShiftServiceRequired && (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className="group cursor-pointer absolute inset-0 flex items-center justify-center">
+            <Plus className="aspect-square w-2 h-2 opacity-20 group-hover:opacity-100 group-hover:w-5 group-hover:h-5 transition-all duration-200" />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56">
+          <DropdownMenuLabel>Employee</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            {employees
+              .sort((a, b) => {
+                if (a.firstname < b.firstname) {
+                  return -1;
+                }
+                if (a.firstname > b.firstname) {
+                  return 1;
+                }
+                return 0;
+              })
+              .map((employee, index) => {
+                const { firstname, lastname, id } = employee;
+                const { isAddable } = checkEmployeeDate({
+                  employee,
+                  shiftService,
+                  groupedShifts,
+                  date,
+                });
 
-              return (
-                <DropdownMenuItem
-                  disabled={!isAddable}
-                  onClick={() => handleDateClick(date, id)}
-                  key={id}
-                >
-                  {firstname} {lastname}
-                  <DropdownMenuShortcut className="tabular-nums">
-                    ⌘{index + 1}
-                  </DropdownMenuShortcut>
-                </DropdownMenuItem>
-              );
-            })}
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+                return (
+                  <DropdownMenuItem
+                    disabled={!isAddable}
+                    onClick={() => handleDateClick(date, id)}
+                    key={id}
+                  >
+                    {firstname} {lastname}
+                    <DropdownMenuShortcut className="tabular-nums">
+                      ⌘{index + 1}
+                    </DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                );
+              })}
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
   );
 }

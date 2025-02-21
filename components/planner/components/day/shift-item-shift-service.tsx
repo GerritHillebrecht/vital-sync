@@ -6,7 +6,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import dayjs, { Dayjs } from "@/lib/dayjs";
+import dayjs from "@/lib/dayjs";
 import { Shift, ShiftService } from "@/models";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { CalendarIcon } from "lucide-react";
@@ -14,16 +14,13 @@ import { PlannerDayShiftSheet } from "./shift-sheet";
 
 interface PlannerDayShiftItemProps {
   shiftService: ShiftService;
-  date: Dayjs;
   shifts: Shift[];
 }
 
 export function PlannerDayShiftItemShiftService({
   shiftService,
   shifts,
-  date,
 }: PlannerDayShiftItemProps) {
-  console.log({ date });
   return (
     <PlannerDayShiftSheet shift={shifts[0]}>
       <div className="absolute cursor-pointer inset-0 flex items-center justify-center lg:hover:bg-muted-foreground/10">

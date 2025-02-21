@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/hover-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { checkEmployeeDate } from "@/lib/utils";
+import { useCurrentLocale } from "@/locales/client";
 
 interface PlannerDayAddShiftProps {
   shiftService: ShiftService;
@@ -43,9 +44,10 @@ export function PlannerDayAddShiftEmployee({
       end_time: shiftService.shiftServiceType?.start_time ?? "19:00",
     };
 
-    console.log("Add shift", shift);
     AddShift(shift);
   }
+
+  const locale = useCurrentLocale();
 
   const { groupedShifts } = usePlanner();
   const {
@@ -84,17 +86,17 @@ export function PlannerDayAddShiftEmployee({
                   )}
                   {isBlockedByPreviousDay && (
                     <p className="text-xs">
-                      {`Doubleshift: ${date.subtract(1, "day").format("DD.MM.YYYY")} already has a nightshift`}
+                      {`Doubleshift: ${date.locale(locale).subtract(1, "day").format("DD.MM.YYYY")} already has a nightshift`}
                     </p>
                   )}
                   {isBlockedByNextDay && (
                     <p className="text-xs">
-                      {`Doubleshift: ${date.add(1, "day").format("DD.MM.YYYY")} already has a dayshift`}
+                      {`Doubleshift: ${date.locale(locale).add(1, "day").format("DD.MM.YYYY")} already has a dayshift`}
                     </p>
                   )}
                   {isShiftServiceNotRequired && (
                     <p className="text-xs">
-                      {`${shiftService.clients?.map(({ firstname }) => firstname).join(", ")} dont require service on ${date.add(1, "day").format("dddd")}.`}
+                      {`Service is not required on ${date.locale(locale).format("dddd")}.`}
                     </p>
                   )}
                   <div className="flex items-center pt-2">

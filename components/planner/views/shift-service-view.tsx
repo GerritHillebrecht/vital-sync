@@ -98,7 +98,6 @@ export function PlannerViewShiftService({
                   {isDateSatisfied && (
                     <PlannerDayShiftItemShiftService
                       shiftService={shiftService}
-                      date={date}
                       shifts={shiftsForDay}
                     />
                   )}

@@ -53,6 +53,9 @@ export function checkEmployeeDate({
   groupedShifts,
   date,
 }: CheckEmployeeDateProps) {
+  const isEmployeeAlreadyAssigned =
+    (groupedShifts?.[employee.id]?.[date.format("MM-DD")]?.length ?? 0) > 0;
+
   const isShiftServiceSatisfied =
     (groupedShifts?.[shiftService.id]?.[date.format("MM-DD")]?.length ?? 0) > 0;
   const previousDay = date.subtract(1, "day");
@@ -82,6 +85,7 @@ export function checkEmployeeDate({
   );
 
   const isAddable = ![
+    isEmployeeAlreadyAssigned,
     isShiftServiceSatisfied,
     isBlockedByPreviousDay,
     isBlockedByNextDay,
@@ -89,6 +93,7 @@ export function checkEmployeeDate({
   ].some(Boolean);
 
   return {
+    isEmployeeAlreadyAssigned,
     isShiftServiceSatisfied,
     isBlockedByPreviousDay,
     isBlockedByNextDay,

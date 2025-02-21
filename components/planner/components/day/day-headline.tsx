@@ -45,7 +45,7 @@ export function PlannerDayHeadline({
             ? satisfied
               ? "bg-green-400 group-hover:shadow-green-400"
               : "bg-orange-400 group-hover:shadow-orange-400"
-            : "bg-transparent"
+            : "bg-muted"
         )}
       ></div>
     </div>

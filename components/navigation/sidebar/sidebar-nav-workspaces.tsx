@@ -20,12 +20,13 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { useCurrentLocale } from "@/locales/client";
+import { useCurrentLocale, useScopedI18n } from "@/locales/client";
 import Link from "next/link";
 
 export function NavWorkspaces() {
   const { company, company_id, workspace_id } = usePlanner();
   const locale = useCurrentLocale();
+  const t = useScopedI18n("sidebar.workspace");
 
   return company?.workspaces?.map((workspace) => (
     <SidebarGroup key={workspace.id}>
@@ -39,10 +40,10 @@ export function NavWorkspaces() {
           <SidebarMenuItem>
             <CollapsibleTrigger asChild>
               <SidebarMenuButton
-                tooltip={`Dienstpläne ${workspace.workspace_name}`}
+                tooltip={`${t("roster")} ${workspace.workspace_name}`}
               >
                 <CalendarRange />
-                <span>Dienstpläne</span>
+                <span>{t("roster")}</span>
                 <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
               </SidebarMenuButton>
             </CollapsibleTrigger>
@@ -72,10 +73,10 @@ export function NavWorkspaces() {
           <SidebarMenuItem>
             <CollapsibleTrigger asChild>
               <SidebarMenuButton
-                tooltip={`Einstellungen ${workspace.workspace_name}`}
+                tooltip={`${t("settings")} ${workspace.workspace_name}`}
               >
                 <Settings />
-                <span>Settings</span>
+                <span>{t("settings")}</span>
                 <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
               </SidebarMenuButton>
             </CollapsibleTrigger>

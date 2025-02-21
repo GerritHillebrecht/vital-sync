@@ -21,9 +21,11 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { useScopedI18n } from "@/locales/client";
 
 export function NavCompany() {
   const { company } = usePlanner();
+  const t = useScopedI18n("sidebar.company");
 
   return (
     <SidebarGroup>
@@ -40,10 +42,10 @@ export function NavCompany() {
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton
-                  tooltip={`Mitarbeiter ${company?.company_name}`}
+                  tooltip={`${t("employees")} ${company?.company_name}`}
                 >
                   <UserRound />
-                  <span>Mitarbeiter</span>
+                  <span>{t("employees")}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>

@@ -13,6 +13,13 @@ export default {
       notifications: "Notifications",
       logout: "Log out",
     },
+    workspace: {
+      roster: "Roster",
+      settings: "Settings",
+    },
+    company: {
+      employees: "Employees",
+    },
     inset: {
       workspace: "Workspace",
       overview: "Overview",

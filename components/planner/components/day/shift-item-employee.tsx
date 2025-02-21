@@ -6,6 +6,7 @@ import { shiftServiceIcons } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 import { Shift, ShiftService } from "@/models";
 import { PlannerDayShiftSheet } from "./shift-sheet";
+import { useIsMobile } from "@/hooks";
 
 interface PlannerDayShiftItemProps {
   shiftService: ShiftService;
@@ -17,6 +18,8 @@ export function PlannerDayShiftItemEmployee({
   shiftService,
   shifts,
 }: PlannerDayShiftItemProps) {
+  const isMobile = useIsMobile();
+
   return shifts?.map((shift) => {
     const IconComponent =
       shiftServiceIcons[
@@ -34,17 +37,16 @@ export function PlannerDayShiftItemEmployee({
                     ?.icon_color as keyof typeof shiftServiceColors) ?? "rose"
                 ]
               }
-              size={34}
+              size={isMobile ? 24 : 34}
               strokeWidth={0.75}
               className={cn(
-                shiftService.id !== shift.shiftService_id &&
-                  "opacity-10 mix-blend-multiply"
+                shiftService.id !== shift.shiftService_id && "opacity-40"
               )}
             />
             <div
               className={cn(
                 "absolute inset-0 flex items-center justify-center",
-                shiftService.id !== shift.shiftService_id && "opacity-40"
+                shiftService.id !== shift.shiftService_id && "opacity-50"
               )}
             >
               <span className="text-[0.5rem]">

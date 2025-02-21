@@ -6,7 +6,7 @@ import { ThemeModeToggle } from "./theme-selector";
 
 export function Footer() {
   return (
-    <footer className="py-8 border-t bg-background">
+    <footer className="py-8 px-4 lg:px-0 border-t bg-background">
       <div className="mx-auto max-w-7xl">
         <nav className="flex items-center justify-between gap-x-2">
           <Logo />

@@ -15,6 +15,13 @@ export default {
       notifications: "Benachrichtigungen",
       logout: "Abmelden",
     },
+    workspace: {
+      roster: "Dienstplan",
+      settings: "Einstellungen",
+    },
+    company: {
+      employees: "Mitarbeiter",
+    },
     inset: {
       workspace: "Versorgung",
       overview: "Übersicht",
