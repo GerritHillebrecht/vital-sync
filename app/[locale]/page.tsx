@@ -22,10 +22,8 @@ export default function Page() {
       </header>
       <div className="relative">
         <HeroSection />
-        {/* <Separator /> */}
         <AnimatedBeamMultipleOutputDemo />
       </div>
-      {/* <Separator /> */}
       <FeatureSection />
     </div>
   );

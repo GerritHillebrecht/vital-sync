@@ -7,8 +7,4 @@ import "dayjs/locale/de";
 dayjs.extend(localeData);
 dayjs.extend(weekday);
 
-// dayjs.locale("de", {
-//   weekStart: 1, // Set Monday as the first day of the week
-// });
-
 export default dayjs;
