@@ -23,12 +23,14 @@ export function PlannerViewEmployee({
   employee,
   shiftService,
   shifts,
+  employeeOverview = false,
 }: {
+  employeeOverview?: boolean;
   shifts: Record<string, Shift[]>;
-  shiftService: ShiftService;
+  shiftService?: ShiftService;
   employee: Employee;
 }) {
-  const { daysInMonth } = usePlanner();
+  const { daysInMonth, currentMonth } = usePlanner();
 
   const locale = useCurrentLocale();
   const allShiftsOfCurrentEmployee = shifts?.["all"] ?? [];
@@ -57,7 +59,9 @@ export function PlannerViewEmployee({
       <PlannerRowContentMonthgridWrapper>
         <PlannerRowMonthGrid>
           {Array.from({ length: daysInMonth }).map((_, index) => {
-            const date = dayjs().date(index + 1);
+            const date = dayjs()
+              .set("month", currentMonth)
+              .date(index + 1);
             const shiftsForDay = shifts?.[date.format("MM-DD")] ?? [];
             const isDateSatisfied = shiftsForDay.length > 0;
 
@@ -87,12 +91,13 @@ export function PlannerViewEmployee({
                       shiftService={shiftService}
                       date={date}
                       shifts={shiftsForDay}
+                      employeeOverview={employeeOverview}
                     />
                   )}
-                  {!isDateSatisfied && (
+                  {!employeeOverview && !isDateSatisfied  && (
                     <PlannerDayAddShiftEmployee
                       employee={employee}
-                      shiftService={shiftService}
+                      shiftService={shiftService!}
                       date={date}
                     />
                   )}

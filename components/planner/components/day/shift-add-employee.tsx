@@ -7,12 +7,12 @@ import { Dayjs } from "dayjs";
 import { CalendarIcon, Info, Plus } from "lucide-react";
 import { usePlanner } from "../../provider";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { checkEmployeeDate } from "@/lib/utils";
 import { useCurrentLocale } from "@/locales/client";
 
@@ -30,6 +30,7 @@ export function PlannerDayAddShiftEmployee({
   async function handleDateClick() {
     const shift: Omit<Shift, "id" | "created_at"> = {
       date: date
+        .set("month", currentMonth)
         .set(
           "hour",
           Number(shiftService.shiftServiceType?.start_time.split(":")[0]) ?? 7
@@ -49,7 +50,7 @@ export function PlannerDayAddShiftEmployee({
 
   const locale = useCurrentLocale();
 
-  const { groupedShifts } = usePlanner();
+  const { groupedShifts, currentMonth } = usePlanner();
   const {
     isAddable,
     isBlockedByNextDay,

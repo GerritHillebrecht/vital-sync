@@ -23,7 +23,7 @@ export async function getWorkspace(
   return await supabase
     .from("workspaces")
     .select(
-      "*, workspaceType:workspaceTypes(*), clients(*), shiftServices(*, shiftServiceType(*), clients(*))"
+      "*, workspaceType:workspaceTypes(*), employees(*), clients(*), shiftServices(*, shiftServiceType(*), clients(*))"
     )
     .eq("id", workspace_id)
     .abortSignal(abortController.signal)

@@ -49,6 +49,13 @@ export function NavWorkspaces() {
             </CollapsibleTrigger>
             <CollapsibleContent>
               <SidebarMenuSub>
+                <SidebarMenuSubItem>
+                  <SidebarMenuSubButton asChild>
+                    <Link href={`/${locale}/app/${company_id}/${workspace.id}/overview`}>
+                      {t("overview")}
+                    </Link>
+                  </SidebarMenuSubButton>
+                </SidebarMenuSubItem>
                 {workspace.shiftServices?.map((shiftService) => (
                   <SidebarMenuSubItem key={shiftService.id}>
                     <SidebarMenuSubButton asChild>

@@ -16,6 +16,7 @@ export default {
       logout: "Abmelden",
     },
     workspace: {
+      overview: "Übersicht",
       roster: "Dienstplan",
       settings: "Einstellungen",
     },

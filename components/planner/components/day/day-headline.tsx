@@ -9,7 +9,7 @@ interface PlannerDayHeadlineProps {
   date: Dayjs;
   satisfied: boolean;
   className?: string;
-  shiftService: ShiftService;
+  shiftService?: ShiftService;
 }
 
 export function PlannerDayHeadline({
@@ -19,7 +19,7 @@ export function PlannerDayHeadline({
   shiftService,
 }: PlannerDayHeadlineProps) {
   const locale = useCurrentLocale();
-  const isShiftServiceRequired = shiftService.weekdays.includes(
+  const isShiftServiceRequired = shiftService?.weekdays.includes(
     date.day().toString()
   );
 

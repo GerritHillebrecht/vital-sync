@@ -52,6 +52,7 @@ interface PlannerContextType {
 
   startDate: Date;
   endDate: Date;
+  currentMonth: number;
   daysInMonth: number;
 
   updateSearchParams: (state: "prev" | "next" | "today") => void;
@@ -64,6 +65,7 @@ const defaultContextValue: PlannerContextType = {
   updateSearchParams: () => {},
   startDate: dayjs().startOf("month").toDate(),
   endDate: dayjs().endOf("month").toDate(),
+  currentMonth: new Date().getMonth() + 1,
   company: null,
   workspace: null,
   shiftService: null,
@@ -87,6 +89,9 @@ export function PlannerContextProvider({
     dayjs().startOf("month").toDate()
   );
   const [endDate, setEndDate] = useState<Date>(dayjs().endOf("month").toDate());
+  const [currentMonth, setCurrentMonth] = useState<number>(
+    new Date().getMonth() + 1
+  );
   const [daysInMonth, setDaysInMonth] = useState<number>(0);
 
   const [company, setCompany] = useState<Company | null>(null);
@@ -108,8 +113,6 @@ export function PlannerContextProvider({
     }
 
     async function fetchShifts(company_id: Company["id"]) {
-      setShifts([]);
-      setGroupedShifts(null);
 
       const { data: shifts } = await getShiftsInRangeForService(
         dayjs(startDate).subtract(1, "day").toDate(),
@@ -127,6 +130,9 @@ export function PlannerContextProvider({
       return shifts;
     }
 
+    setCurrentMonth(
+      dayjs(startDate).add(dayjs(endDate).diff(startDate, "month")).month()
+    );
     if (company_id) {
       fetchCompany(company_id as Company["id"]);
       fetchShifts(company_id as Company["id"]);
@@ -310,6 +316,7 @@ export function PlannerContextProvider({
 
     startDate,
     endDate,
+    currentMonth,
     daysInMonth,
 
     updateSearchParams,

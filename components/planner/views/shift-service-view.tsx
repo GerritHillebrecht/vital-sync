@@ -34,10 +34,11 @@ export function PlannerViewShiftService({
   shifts?: Record<string, Shift[]>;
 }) {
   const locale = useCurrentLocale();
-  const { daysInMonth, company, company_id, workspace_id } = usePlanner();
+  const { daysInMonth, company, company_id, workspace_id, currentMonth } =
+    usePlanner();
 
   return (
-    <PlannerRow key={shiftService.id}>
+    <PlannerRow>
       <PlannerRowHeadline>
         <div className="flex items-center justify-between w-full">
           <div>
@@ -70,7 +71,9 @@ export function PlannerViewShiftService({
       <PlannerRowContentMonthgridWrapper>
         <PlannerRowMonthGrid className="w-full">
           {Array.from({ length: daysInMonth }).map((_, index) => {
-            const date = dayjs().date(index + 1);
+            const date = dayjs()
+              .set("month", currentMonth)
+              .date(index + 1);
             const shiftsForDay = shifts?.[date.format("MM-DD")] ?? [];
             const isDateSatisfied = shiftsForDay.length > 0;
 

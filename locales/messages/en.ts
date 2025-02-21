@@ -14,6 +14,7 @@ export default {
       logout: "Log out",
     },
     workspace: {
+      overview: "Overview",
       roster: "Roster",
       settings: "Settings",
     },
