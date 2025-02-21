@@ -140,10 +140,7 @@ export function CreateEmployeeForm() {
                   <Input
                     {...field}
                     value={field.value ?? ""}
-                    required
-                    minLength={2}
                     type="text"
-                    autoComplete="given-name"
                     placeholder={t("phone_number_placeholder")}
                   />
                 </FormControl>
@@ -164,10 +161,7 @@ export function CreateEmployeeForm() {
                   <Input
                     {...field}
                     value={field.value ?? ""}
-                    required
-                    minLength={2}
                     type="text"
-                    autoComplete="given-name"
                     placeholder={t("email_placeholder")}
                   />
                 </FormControl>

@@ -169,7 +169,7 @@ export function PlannerContextProvider({
         handleDelete(payload as RealtimePostgresDeletePayload<Shift>),
     } as const;
 
-    const insertSubscription = supabase
+    const shiftSubscription = supabase
       .channel("shifts")
       .on<Shift>(
         "postgres_changes",
@@ -184,7 +184,7 @@ export function PlannerContextProvider({
 
     return () => {
       abortController.abort();
-      supabase.removeChannel(insertSubscription);
+      supabase.removeChannel(shiftSubscription);
     };
   }, [company_id, startDate, endDate]);
 
