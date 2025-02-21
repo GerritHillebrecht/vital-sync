@@ -6,7 +6,7 @@ import { PlannerViewEmployee } from "@/components/planner/views/employee-view";
 export default function Page() {
   const { workspace, groupedShifts } = usePlanner();
   return (
-    <div>
+    <div className="grid gap-4">
       {workspace?.employees?.map((employee) => (
         <PlannerViewEmployee
           key={employee.id}
