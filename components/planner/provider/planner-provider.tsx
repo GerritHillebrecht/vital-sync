@@ -49,6 +49,7 @@ interface PlannerContextType {
   shifts: Shift[];
   setShifts: (shifts: Shift[]) => void;
   groupedShifts: Record<ShiftService["id"], Record<string, Shift[]>> | null;
+  shiftsLoading: boolean;
 
   startDate: Date;
   endDate: Date;
@@ -71,6 +72,7 @@ const defaultContextValue: PlannerContextType = {
   shiftService: null,
   shifts: [],
   groupedShifts: null,
+  shiftsLoading: true,
   setShifts: () => {},
   daysInMonth: 0,
 };
@@ -101,6 +103,7 @@ export function PlannerContextProvider({
   const [groupedShifts, setGroupedShifts] = useState<GroupedShifts | null>(
     null
   );
+  const [shiftsLoading, setShiftsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -113,10 +116,10 @@ export function PlannerContextProvider({
     }
 
     async function fetchShifts(company_id: Company["id"]) {
-
+      setShiftsLoading(true);
       const { data: shifts } = await getShiftsInRangeForService(
-        dayjs(startDate).subtract(1, "day").toDate(),
-        dayjs(endDate).add(1, "day").toDate(),
+        dayjs(startDate).toDate(),
+        dayjs(endDate).toDate(),
         company_id,
         abortController
       );
@@ -126,6 +129,8 @@ export function PlannerContextProvider({
         const groupedShifts = groupShifts(shifts);
         setGroupedShifts(groupedShifts);
       }
+
+      setShiftsLoading(false);
 
       return shifts;
     }
@@ -313,6 +318,7 @@ export function PlannerContextProvider({
     shifts,
     setShifts,
     groupedShifts,
+    shiftsLoading,
 
     startDate,
     endDate,

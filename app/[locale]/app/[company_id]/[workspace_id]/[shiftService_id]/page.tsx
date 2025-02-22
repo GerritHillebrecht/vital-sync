@@ -55,8 +55,7 @@ export default function Page() {
         <Separator />
       </div>
       {shiftService &&
-        company &&
-        company.employees?.map((employee) => (
+        workspace?.employees?.map((employee) => (
           <PlannerViewEmployee
             shiftService={shiftService}
             shifts={groupedShifts ? groupedShifts[employee.id] : {}}

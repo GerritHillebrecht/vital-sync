@@ -42,7 +42,7 @@ export function NavCompany() {
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton
-                  tooltip={`${t("employees")} ${company?.company_name}`}
+                  tooltip={`${t("employees")} ${company?.short_name ?? company?.company_name}`}
                 >
                   <UserRound />
                   <span>{t("employees")}</span>
