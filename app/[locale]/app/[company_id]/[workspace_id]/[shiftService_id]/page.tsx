@@ -15,7 +15,6 @@ export default function Page() {
   const {
     shiftService,
     workspace,
-    company,
     company_id,
     workspace_id,
     groupedShifts,
