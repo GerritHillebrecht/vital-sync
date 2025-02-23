@@ -18,7 +18,7 @@ export default function Page() {
     }
 
     if (company.workspaces?.length === 1) {
-      return redirect(`/app/${company_id}/${company.workspaces[0].id}`);
+      return redirect(`/app/${company_id}/${company.workspaces[0].id}/overview`);
     }
   }
 

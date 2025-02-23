@@ -80,6 +80,7 @@ export function PlannerViewEmployee({
                   date={date}
                   satisfied={isDateSatisfied}
                   shiftService={shiftService}
+                  showInfo={!employeeOverview}
                   className={cn(
                     "border-b",
                     date.locale(locale).weekday() === 0 && "bg-primary/10"

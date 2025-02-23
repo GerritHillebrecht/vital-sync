@@ -10,6 +10,7 @@ interface PlannerDayHeadlineProps {
   satisfied: boolean;
   className?: string;
   shiftService?: ShiftService;
+  showInfo?: boolean;
 }
 
 export function PlannerDayHeadline({
@@ -17,6 +18,7 @@ export function PlannerDayHeadline({
   satisfied,
   className,
   shiftService,
+  showInfo = true,
 }: PlannerDayHeadlineProps) {
   const locale = useCurrentLocale();
   const isShiftServiceRequired = shiftService?.weekdays.includes(
@@ -41,7 +43,7 @@ export function PlannerDayHeadline({
       <div
         className={cn(
           "rounded h-1 w-3 group-hover:shadow-sm transition-shadow duration-200",
-          isShiftServiceRequired
+          showInfo && isShiftServiceRequired
             ? satisfied
               ? "bg-green-400 group-hover:shadow-green-400"
               : "bg-orange-400 group-hover:shadow-orange-400"
